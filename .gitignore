@@ -1,0 +1,6 @@
+logs/
+data/
+tmp/
+
+.last_invalidation
+.last_published
