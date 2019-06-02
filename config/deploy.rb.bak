@@ -1,0 +1,57 @@
+# config valid only for current version of Capistrano
+lock "3.8.1"
+
+# set :application, proc { fetch(:stage).split(':').reverse[1] }
+# set :repo_url, proc { "#{ENV['GIT_SOURCE']}/#{fetch(:application)}.git" }
+
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+# set :branch, ENV["branch"] || "develop"
+
+# Default deploy_to directory is /var/www/my_app_name
+# set :deploy_to, proc { "/var/www/html/#{fetch(:application)}" }
+
+# Airbrush
+# set :format_options, log_file: "logs/#{fetch(:stage).split(':').reverse[1]}.#{fetch(:stage).split(':').reverse[0]}.log"
+
+# SSH
+# set :pty, true
+
+# Default value for :linked_files is []
+# append :linked_files, ".env"
+
+# Default value for linked_dirs is []
+append :linked_dirs, "storage", "vendor"
+
+SSHKit.config.command_map[:chmod] = "sudo chmod"
+SSHKit.config.command_map[:chgrp] = "sudo chgrp"
+SSHKit.config.command_map[:chown] = "sudo chown"
+SSHKit.config.command_map[:cachetool] = 'sudo cachetool'
+SSHKit.config.command_map[:supervisord] = "sudo service supervisord"
+
+if ENV["VIA_BASTION"]
+  require "net/ssh/proxy/command"
+
+  # Use a default host for the bastion, but allow it to be overridden
+  bastion_host = ENV["BASTION_HOST"] || "1.2.3.4"
+
+  # Use the local username by default
+  bastion_user = ENV["BASTION_USER"] || "ec2-user"
+
+  # Configure Capistrano to use the bastion host as a proxy
+  ssh_command = "ssh -W %h:%p #{bastion_user}@#{bastion_host}"
+
+  set :ssh_options, proxy: Net::SSH::Proxy::Command.new(ssh_command)
+end
+
+namespace :deploy do
+    before "symlink:release", "composer:config_sod_shared"
+    before "symlink:release", "composer:update"
+    before "symlink:release", "composer:dump_autoload"
+    before "symlink:release", "laravel:permissions"
+    before "symlink:release", "laravel:migrate"
+
+    after :finished, "cachetool:opcache_reset"
+
+    after :finished, :cleanup
+end
