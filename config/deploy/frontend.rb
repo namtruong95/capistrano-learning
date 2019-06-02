@@ -8,13 +8,13 @@ set :group_env, ['PRODUCTION', 'API_URL']
 # set :secret_access_key, ENV["AWS_SECRET_ACCESS_KEY"] || ""
 set :web_path, "data/#{fetch(:application)}-#{Time.now.to_i}"
 set :target_env, :dev # force target_env to dev
-set :web_command_build, "cd #{fetch(:web_path)} && yarn build:#{fetch(:target_env)}"
 
 # Deployment settings
-set :deployment_path, "#{fetch(:web_path)}/dist"
-set :target_path, ""
+set :target_path, "dist/html"
+set :deployment_path, "#{fetch(:web_path)}/#{fetch(:target_path)}"
+set :web_command_build, "cd #{fetch(:web_path)} && yarn build:#{fetch(:target_env)} --output-path=#{fetch(:target_path)}"
 set :only_gzip, false
-set :exclusions, %w(index.html)
+# set :exclusions, %w(index.html)
 set :bucket_write_options, {
   cache_control: "max-age=94608000, public"
 }
@@ -22,10 +22,7 @@ set :redirect_options, { }
 
 # Cloudfront
 # set :distribution_id, ENV["AWS_CLOUDFRONT_ID"] || ""
-set :invalidations, fetch(:exclusions)
-
-# 
-set :deploy_to, "html"
+# set :invalidations, fetch(:exclusions)
 
 before "deploy", :run1 do
   invoke "frontend:clone"

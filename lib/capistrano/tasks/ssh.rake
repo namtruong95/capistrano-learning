@@ -1,10 +1,12 @@
 namespace :ssh do
   task :publish do
     run_locally do
-      execute "echo #{fetch(:deploy_to)}"
-
       on 'server1' do
-        upload! "#{fetch(:deployment_path)}", fetch(:deploy_to), recursive: true
+        execute "rm -rf #{fetch(:deploy_to)}/html"
+
+        upload! "#{fetch(:deployment_path)}", "#{fetch(:deploy_to)}", recursive: true
+
+        execute "pm2 restart #{fetch(:deploy_to)}/ecosystem.config.js"
       end
     end
   end
