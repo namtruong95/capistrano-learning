@@ -45,3 +45,5 @@ $ cap <stage><env-name> deploy
 | store-web | cap store-web:dev deploy |
 | cast-web  | cap cast-web:dev deploy  |
 | user-web  | cap user-web:dev deploy  |
+
+cap doctor-web:dev deploy
