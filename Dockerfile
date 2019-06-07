@@ -4,13 +4,14 @@ LABEL MAINTAINER="hoangmy92@gmail.com"
 
 ENV LANG C.UTF-8
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-
 RUN apt-get update && apt-get install -y \
   build-essential \
   git \
-  vim \
-  nodejs
+  vim
+
+# Insall nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+  && apt-get install -y nodejs
 
 # Add SSH
 COPY .ssh /tmp/.ssh

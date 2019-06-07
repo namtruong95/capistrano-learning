@@ -6,7 +6,7 @@ namespace :ssh do
 
         upload! "#{fetch(:deployment_path)}", "#{fetch(:deploy_to)}", recursive: true
 
-        execute "pm2 restart #{fetch(:deploy_to)}/ecosystem.config.js"
+        execute "/usr/local/lib/npm/bin/pm2 restart #{fetch(:deploy_to)}/ecosystem.config.js"
       end
     end
   end
