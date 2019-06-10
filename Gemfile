@@ -6,6 +6,7 @@ gem "capistrano", "3.8.1"
 gem "capistrano-multiconfig"
 gem "capistrano-touch-linked-files"
 gem "capistrano-env-config"
+gem "capistrano-s3"
 
 # gem 'capistrano-s3',
 #   :git => 'https://github.com/hooktstudios/capistrano-s3.git',

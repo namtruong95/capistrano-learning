@@ -23,9 +23,9 @@ require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git
 
 # capistrano aws s3
-# if /web/.match(ARGV[0])
-#   require 'capistrano/s3'
-# end
+if /web|frontend/.match(ARGV[0])
+  require 'capistrano/s3'
+end
 
 # Include tasks from other gems included in your Gemfile
 #

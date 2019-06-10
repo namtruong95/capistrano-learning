@@ -2,10 +2,11 @@
 set :group_env, ['PRODUCTION', 'API_URL']
 
 # S3
-# set :region, ENV["AWS_REGION"] || "us-east-1"
-# set :bucket, ENV["AWS_BUCKET"] || "sample"
-# set :access_key_id, ENV["AWS_ACCESS_KEY_ID"] || ""
-# set :secret_access_key, ENV["AWS_SECRET_ACCESS_KEY"] || ""
+set :region, ENV["AWS_REGION"] || "us-east-1"
+set :bucket, ENV["AWS_BUCKET"] || "sample"
+set :access_key_id, ENV["AWS_ACCESS_KEY_ID"] || ""
+set :secret_access_key, ENV["AWS_SECRET_ACCESS_KEY"] || ""
+
 set :web_path, "data/#{fetch(:application)}-#{Time.now.to_i}"
 set :target_env, :dev # force target_env to dev
 
@@ -31,8 +32,12 @@ before "deploy", :run1 do
   invoke "frontend:build"
 end
 
+# after "deploy:published", :run2 do
+#   invoke "ssh:publish"
+# end
+
 after "deploy:published", :run2 do
-  invoke "ssh:publish"
+  invoke "cloudfront:invalidation"
 end
 
 before "deploy:finished", :run3 do
