@@ -3,6 +3,8 @@ set :group_env, ['PRODUCTION', 'API_URL']
 
 # S3
 set :region, ENV["AWS_REGION"] || "us-east-1"
+set :s3_endpoint, 'play.min.io:9000'
+
 set :bucket, ENV["AWS_BUCKET"] || "sample"
 set :access_key_id, ENV["AWS_ACCESS_KEY_ID"] || ""
 set :secret_access_key, ENV["AWS_SECRET_ACCESS_KEY"] || ""
